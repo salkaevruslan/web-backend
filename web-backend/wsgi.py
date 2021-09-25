@@ -1,5 +1,5 @@
 """
-WSGI config for webBackend project.
+WSGI config for web-backend project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'webBackend.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'web-backend.settings')
 
 application = get_wsgi_application()
