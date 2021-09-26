@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from points.models import Point
-from points.services import get_all_points, get_points_by_name, get_closest_point
+from points.services import get_all_points, get_points_by_name, get_closest_point, process_request
 
 
 class IntegrationTests(TestCase):
@@ -54,3 +54,24 @@ class IntegrationTests(TestCase):
         self.assertEqual(result.point_name, 'c')
         self.assertEqual(result.x, 1)
         self.assertEqual(result.y, 0)
+
+    def test_adding_points(self):
+        status, result = process_request({'x': 3, 'y': 4, 'point_name': 'z'})
+        self.assertEqual(result, 5)
+        self.assertTrue(status)
+        status, result = process_request({'x': 0, 'y': -1, 'point_name': 't'})
+        self.assertEqual(result, 1)
+        self.assertTrue(status)
+        serializer = get_points_by_name('z')
+        self.assertEqual(len(serializer.data), 1)
+        for point in serializer.data:
+            self.assertEqual(point.get('point_name'), 'z')
+            self.assertEqual(point.get('x'), 3)
+            self.assertEqual(point.get('y'), 4)
+        serializer = get_points_by_name('t')
+        self.assertEqual(len(serializer.data), 1)
+        for point in serializer.data:
+            self.assertEqual(point.get('point_name'), 't')
+            self.assertEqual(point.get('x'), 0)
+            self.assertEqual(point.get('y'), -1)
+
