@@ -1,10 +1,7 @@
-import json
-
 from django.test import TestCase
-from django.urls import reverse
 
 from points.models import Point
-from points.serializers import PointSerializer
+from points.services import get_all_points, get_points_by_name, get_closest_point
 
 
 class IntegrationTests(TestCase):
@@ -15,60 +12,45 @@ class IntegrationTests(TestCase):
         cls.second_test_point = Point.objects.create(point_name='b', x=-3, y=-4)
         cls.third_test_point = Point.objects.create(point_name='c', x=1, y=0)
 
-    def test_get_points_without_name(self):
-        response = self.client.get(reverse('points'))
-        self.assertEqual(response.status_code, 200)
-        json_data = json.loads(response.content)
-        serializer = PointSerializer(data=json_data, many=True)
-        self.assertTrue(serializer.is_valid())
-        points = serializer.validated_data
-        self.assertEqual(len(points), 3)
-        for point in points:
-            self.assertTrue(point.get('point_name') in ['a', 'b', 'c'])
+    def test_get_all_points_names(self):
+        serializer = get_all_points()
+        self.assertEqual(len(serializer.data), 3)
+        for point in serializer.data:
+            name = point.get('point_name')
+            self.assertTrue(name in ['a', 'b', 'c'])
+
+    def test_get_all_points_coords(self):
+        serializer = get_all_points()
+        self.assertEqual(len(serializer.data), 3)
+        for point in serializer.data:
             x = point.get('x')
             y = point.get('y')
             self.assertTrue((x, y) in [(8, -6), (-3, -4), (1, 0)])
 
-    def test_get_points_with_correct_name(self):
-        response = self.client.get(reverse('points'), {'point_name': 'a'})
-        self.assertEqual(response.status_code, 200)
-        json_data = json.loads(response.content)
-        serializer = PointSerializer(data=json_data, many=True)
-        self.assertTrue(serializer.is_valid())
-        points = serializer.validated_data
-        self.assertEqual(len(points), 1)
-        for point in points:
-            self.assertEqual(point.get('point_name'), 'a')
+    def test_get_point_by_name(self):
+        serializer = get_points_by_name('a')
+        self.assertEqual(len(serializer.data), 1)
+        for point in serializer.data:
             x = point.get('x')
             y = point.get('y')
+            self.assertEqual(point.get('point_name'), 'a')
             self.assertEqual(x, 8)
             self.assertEqual(y, -6)
 
-    def test_get_points_with_incorrect_name(self):
-        response = self.client.get(reverse('points'), {'point_name': 'z'})
-        self.assertEqual(response.status_code, 200)
-        json_data = json.loads(response.content)
-        serializer = PointSerializer(data=json_data, many=True)
-        self.assertTrue(serializer.is_valid())
-        points = serializer.validated_data
-        self.assertEqual(len(points), 0)
+    def test_get_point_by_name_wrong_name(self):
+        serializer = get_points_by_name('z')
+        self.assertEqual(len(serializer.data), 0)
 
-    def test_post_correct_data(self):
-        response = self.client.post(reverse('points'), {'x': '-4', 'y': '3', 'point_name': 'z'},
-                                    content_type='application/json')
-        self.assertEqual(response.status_code, 200)
-        json_data = json.loads(response.content)
-        self.assertLess(abs(json_data.get('distance to zero') ** 2 - 25), 1e-6)
-        self.assertEqual(len(Point.objects.all()), 4)
+    def test_get_closest_point(self):
+        distance, result = get_closest_point(Point(point_name='asd', x=100, y=-55))
+        self.assertLess(abs(distance ** 2 - 10865), 1e-6)
+        self.assertEqual(result.point_name, 'a')
+        self.assertEqual(result.x, 8)
+        self.assertEqual(result.y, -6)
 
-    def test_post_incorrect_name(self):
-        response = self.client.post(reverse('points'), {'x': '-4', 'y': '3', 'point_name': ''},
-                                    content_type='application/json')
-        print(response.content)
-        self.assertEqual(response.status_code, 422)
-
-    def test_post_incorrect_coords(self):
-        response = self.client.post(reverse('points'), {'x': '1001', 'y': '3', 'point_name': 'asdf'},
-                                    content_type='application/json')
-        print(response.content)
-        self.assertEqual(response.status_code, 422)
+    def test_get_closest_point_exists_same(self):
+        distance, result = get_closest_point(Point(point_name='asd', x=1, y=0))
+        self.assertLess(abs(distance ** 2 - 0), 1e-6)
+        self.assertEqual(result.point_name, 'c')
+        self.assertEqual(result.x, 1)
+        self.assertEqual(result.y, 0)
