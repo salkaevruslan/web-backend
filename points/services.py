@@ -68,8 +68,6 @@ def process_request(request_data):
 
 
 def process_name(name):
-    print(123456)
-    print(name)
     if len(name) < 1:
         return False, JsonResponse(
             {"error": "point_name should contain at least 1 character"},
