@@ -1,0 +1,77 @@
+[
+  {
+    "model": "points.point",
+    "pk": 1,
+    "fields": {
+      "point_name": "First user coords",
+      "x": 10,
+      "y": 10
+    }
+  },
+  {
+    "model": "points.point",
+    "pk": 2,
+    "fields": {
+      "point_name": "Second user coords",
+      "x": -10,
+      "y": -10
+    }
+  },
+  {
+    "model": "points.point",
+    "pk": 3,
+    "fields": {
+      "point_name": "Third user coords",
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "model": "points.userdata",
+    "pk": 1,
+    "fields": {
+      "name": "User1",
+      "email": "abc@gmail.com",
+      "coords": 1
+    }
+  },
+  {
+    "model": "points.userdata",
+    "pk": 2,
+    "fields": {
+      "name": "First User",
+      "email": "b@gmail.com",
+      "coords": 2
+    }
+  },
+  {
+    "model": "points.userdata",
+    "pk": 3,
+    "fields": {
+      "name": "Second User",
+      "email": "c@gmail.com",
+      "coords": 3
+    }
+  },
+  {
+    "model": "points.user",
+    "pk": 1,
+    "fields": {
+      "user_data": 1
+    }
+  },
+  {
+    "model": "points.user",
+    "pk": 2,
+    "fields": {
+      "user_data": 2
+    }
+  },
+  {
+    "model": "points.user",
+    "pk": 3,
+    "fields": {
+      "user_data": 3
+    }
+  }
+]
