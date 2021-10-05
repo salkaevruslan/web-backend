@@ -30,7 +30,7 @@
     "model": "points.userdata",
     "pk": 1,
     "fields": {
-      "name": "User1",
+      "name": "First User",
       "email": "abc@gmail.com",
       "coords": 1
     }
@@ -39,7 +39,7 @@
     "model": "points.userdata",
     "pk": 2,
     "fields": {
-      "name": "First User",
+      "name": "Second User",
       "email": "b@gmail.com",
       "coords": 2
     }
@@ -48,7 +48,7 @@
     "model": "points.userdata",
     "pk": 3,
     "fields": {
-      "name": "Second User",
+      "name": "Third User",
       "email": "c@gmail.com",
       "coords": 3
     }

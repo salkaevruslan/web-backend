@@ -11,7 +11,7 @@ class PointType(DjangoObjectType):
         model = Point
         fields = ('id', 'x', 'y', 'point_name')
         filter_fields = ('id', 'point_name')
-        interfaces = (relay.Node,)
+        interfaces = [relay.Node]
 
 
 class UserDataType(DjangoObjectType):
@@ -19,7 +19,7 @@ class UserDataType(DjangoObjectType):
         model = UserData
         fields = ('id', 'coords', 'name', 'email')
         filter_fields = ['id', 'name', 'email']
-        interfaces = (relay.Node,)
+        interfaces = [relay.Node]
 
 
 class UserType(DjangoObjectType):
@@ -27,7 +27,7 @@ class UserType(DjangoObjectType):
         model = User
         fields = ('id', 'user_data')
         filter_fields = ['id']
-        interfaces = (relay.Node,)
+        interfaces = [relay.Node]
 
 
 class Query(graphene.ObjectType):
