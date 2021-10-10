@@ -23,6 +23,7 @@ def get_points_by_name(name):
 def get_point_distance_to_zero(point):
     return get_coords_distance_to_zero(point.x, point.y)
 
+
 def get_distance_between_points(point1, point2):
     return get_distance_between_coords(point1.x, point1.y, point2.x, point2.y)
 
